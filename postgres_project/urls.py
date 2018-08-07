@@ -20,4 +20,5 @@ from apps.crud_app import urls as crud_url
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^app/', include(crud_url)),
+    url(r'^$', include(crud_url)),
 ]
