@@ -45,13 +45,18 @@ def register_user(request):
         email = request.POST.get("email");
         phoneno = request.POST.get("phoneno");
         password = request.POST.get("pwd");
-        user = User()
-        user.name = name
-        user.email = email
-        user.password = password
-        user.phone_number = phoneno
-        user.save();
-        request.session['name'] = name
-        request.session['email'] = name
-        request.session['phoneno'] = phoneno
-        return render(request,'index');
+        checkUser = User.objects.filter(email=email)
+        if checkUser:#that means user exists
+            messages.error(request, 'user with this email already exists')
+            return render(request, 'register.html');
+        else:
+            user = User()
+            user.name = name
+            user.email = email
+            user.password = password
+            user.phone_number = phoneno
+            user.save();
+            request.session['name'] = name
+            request.session['email'] = name
+            request.session['phoneno'] = phoneno
+            return render(request,'index');
