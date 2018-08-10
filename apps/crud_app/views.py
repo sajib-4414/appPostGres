@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.contrib import messages
 from django.views.decorators.csrf import csrf_protect
 from .models import User
 
@@ -26,8 +26,9 @@ def login(request):
             print(user[0].name)
             return get_index_page(request)
         else:
-            return HttpResponse("Authentication error")
-    return HttpResponse("undefined")
+            messages.error(request, 'email or password error')
+            return render(request, 'login.html');
+    return render(request, 'login.html');
 def logout(request):
     session_keys = list(request.session.keys())
     for key in session_keys:
