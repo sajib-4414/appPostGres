@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_protect
 from .models import User
+from . import utils
 
 # Create your views here.
 def get_index_page(request):
@@ -56,7 +57,32 @@ def register_user(request):
             user.password = password
             user.phone_number = phoneno
             user.save();
-            request.session['name'] = name
-            request.session['email'] = name
-            request.session['phoneno'] = phoneno
+            utils.saveUserinSession(request,user)
             return render(request,'index');
+
+@csrf_protect
+def profile(request):
+    if(request.method == 'GET'):
+        logged_email = request.session['email']
+        logged_user = User.objects.filter(email=logged_email);
+        context = {
+            'user': logged_user[0]
+        }
+        return render(request, 'profile.html', context);
+    else:#request is post
+        #getting post parameters
+        name = request.POST.get("name");
+        phoneno = request.POST.get("phoneno");
+        password = request.POST.get("pwd");
+        query = User.objects.filter(email=request.session['email'])
+        user = query[0]
+        user.phone_number = phoneno
+        user.password = password
+        user.name = name
+        user.save();
+        utils.saveUserinSession(request,user)
+        messages.success(request, 'your info was saved successfully')
+        context = {
+            'user': user
+        }
+        return render(request, 'profile.html', context);
