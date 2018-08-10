@@ -1,13 +1,38 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
 from .models import User
 
 # Create your views here.
 def get_index_page(request):
-    return render(request,'index.html');
+    print("index method")
+    return render(request,'index.html')
 def get_about_page(request):
-    return render(request,'about.html');
+    return render(request,'about.html')
+
+@csrf_protect
+def login(request):
+    print("login method")
+    if (request.method == 'POST'):
+        # getting post parameters
+        email = request.POST.get("email");
+        password = request.POST.get("pwd");
+        user = User.objects.filter(email=email).filter(password=password)
+        if user:#that means we got a valid user
+            request.session['name'] = user[0].name
+            request.session['email'] = user[0].email
+            request.session['phoneno'] = user[0].phone_number
+            print(user[0].name)
+            return get_index_page(request)
+        else:
+            return HttpResponse("Authentication error")
+    return HttpResponse("undefined")
+def logout(request):
+    session_keys = list(request.session.keys())
+    for key in session_keys:
+        del request.session[key]
+    return redirect( 'index');
 
 @csrf_protect
 def register_user(request):
@@ -28,4 +53,4 @@ def register_user(request):
         request.session['name'] = name
         request.session['email'] = name
         request.session['phoneno'] = phoneno
-        return redirect('/app');
+        return render(request,'index');
