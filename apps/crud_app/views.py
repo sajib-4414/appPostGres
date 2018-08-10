@@ -86,3 +86,6 @@ def profile(request):
             'user': user
         }
         return render(request, 'profile.html', context);
+
+def all_posts(request):
+    return render(request,'blog-fullwidth.html')
