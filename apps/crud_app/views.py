@@ -1,8 +1,10 @@
+from datetime import datetime
+
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_protect
-from .models import User
+from .models import User, Category,Post,Comment
 from . import utils
 
 # Create your views here.
@@ -58,7 +60,7 @@ def register_user(request):
             user.phone_number = phoneno
             user.save();
             utils.saveUserinSession(request,user)
-            return render(request,'index');
+            return render(request,'index.html');
 
 @csrf_protect
 def profile(request):
@@ -90,4 +92,28 @@ def profile(request):
 def all_posts(request):
     return render(request, 'all_posts.html')
 def create_new_post(request):
-    return HttpResponse("worked")
+    if(request.method == 'GET'):
+        categories = Category.objects.all()
+        context = {
+            'categories':categories,
+        }
+        return render(request, 'create_new_post.html',context)
+    else:#its a post request
+        title = request.POST.get("title");
+        description = request.POST.get("description");
+        category_id = request.POST.get("category");
+        category_query = Category.objects.filter(id=category_id)
+        category = category_query[0]
+        post = Post()
+        post.title = title
+        post.description = description
+        post.post_category = category
+        post.date_published = datetime.now()
+        post.user_who_published = User.objects.filter(email=request.session['email'])[0]
+        post.save();
+        messages.success(request, 'post created successfully')
+        categories = Category.objects.all()
+        context = {
+            'categories': categories,
+        }
+        return render(request, 'create_new_post.html', context);

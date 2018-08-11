@@ -69,7 +69,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'postgres_project.wsgi.application'
-
+AUTHENTICATION_BACKENDS = (
+    ('django.contrib.auth.backends.ModelBackend'),
+)
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
