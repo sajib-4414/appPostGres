@@ -3,7 +3,6 @@ from datetime import datetime
 from django.db import models
 
 # Create your models here.
-from django import forms
 class Category(models.Model):
     id = models.CharField(max_length=10, primary_key=True)
     name = models.CharField(max_length=100)
@@ -29,3 +28,9 @@ class Post(models.Model):
         on_delete=models.CASCADE,
         primary_key=False,
     )
+class Comment(models.Model):
+    id = models.CharField(max_length=10, primary_key=True)
+    corresponding_post = models.ForeignKey(Post,on_delete=models.CASCADE)
+    user_commented = models.OneToOneField(User,on_delete=models.CASCADE)
+    description = models.TextField()
+    date_published = models.DateTimeField(default=datetime.now)

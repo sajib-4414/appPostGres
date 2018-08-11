@@ -88,4 +88,6 @@ def profile(request):
         return render(request, 'profile.html', context);
 
 def all_posts(request):
-    return render(request,'blog-fullwidth.html')
+    return render(request, 'all_posts.html')
+def create_new_post(request):
+    return HttpResponse("worked")
