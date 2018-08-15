@@ -1,0 +1,91 @@
+{% extends 'common/base.html' %}
+{% block content %}
+
+
+        <!--
+        ==================================================
+            Global Page Section Start
+        ================================================== -->
+        <section class="global-page-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="block">
+                            <h2>Create a new post</h2>
+                            <ol class="breadcrumb">
+                                <li>
+                                    <a href="index.html">
+                                        <i class="ion-ios-home"></i>
+                                        Home
+                                    </a>
+                                </li>
+                                <li class="active">Create post</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+<!--=====================================
+=            Full Width Blog            =
+======================================-->
+<section class="company-description">
+    <div class="container">
+        <form name="registerForm" action="{% url 'create_new_post' %}" method="post" >
+            {% csrf_token %}
+            <div class="form-group">
+                  <label for="title">Title:</label>
+                  <input type="text" class="form-control" id="title" placeholder="Enter title" name="title" required>
+                </div>
+                <div class="form-group">
+                  <label for="description">Description:</label>
+                    <textarea type="email" class="form-control" id="description" placeholder="Enter description" name="description" required> </textarea>
+                </div>
+            <div class="form-group">
+                  <label for="category">Category:</label>
+                  <select id="category" name="category">
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                  </select>
+                </div>
+
+
+                <button type="submit" class="btn btn-default">Submit</button>
+          </form>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <br>
+    </div>
+</section>
+
+
+
+
+            <!--
+            ==================================================
+            Call To Action Section Start
+            ================================================== -->
+            <section id="call-to-action">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="block">
+                                <h2 class="title wow fadeInDown" data-wow-delay=".3s" data-wow-duration="500ms">SO WHAT YOU THINK ?</h2>
+                                <p class="wow fadeInDown" data-wow-delay=".5s" data-wow-duration="500ms">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis,<br>possimus commodi, fugiat magnam temporibus vero magni recusandae? Dolore, maxime praesentium.</p>
+                                <a href="contact.html" class="btn btn-default btn-contact wow fadeInDown" data-wow-delay=".7s" data-wow-duration="500ms">Contact With Me</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+{% endblock %}
