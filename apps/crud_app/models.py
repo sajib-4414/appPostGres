@@ -16,15 +16,13 @@ class Post(models.Model):
     title = models.TextField()
     date_published = models.DateTimeField(default=datetime.now)
     description = models.TextField()
-    user_who_published = models.OneToOneField(
+    user_who_published = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        primary_key=False,
     )
-    post_category = models.OneToOneField(
+    post_category = models.ForeignKey(
         Category,
         on_delete=models.CASCADE,
-        primary_key=False,
     )
 class Comment(models.Model):
     corresponding_post = models.ForeignKey(Post,on_delete=models.CASCADE)
