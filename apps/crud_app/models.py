@@ -24,6 +24,8 @@ class Post(models.Model):
         Category,
         on_delete=models.CASCADE,
     )
+    image_file_link = models.TextField()
+    uploaded_at = models.DateTimeField(auto_now_add=True)
 class Comment(models.Model):
     corresponding_post = models.ForeignKey(Post,on_delete=models.CASCADE)
     user_commented = models.OneToOneField(User,on_delete=models.CASCADE)

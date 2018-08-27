@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -110,10 +111,18 @@ def create_new_post(request):
         post.post_category = category
         post.date_published = datetime.now()
         post.user_who_published = User.objects.filter(email=request.session['email'])[0]
-        post.save();
-        messages.success(request, 'post created successfully')
         categories = Category.objects.all()
         context = {
             'categories': categories,
         }
-        return render(request, 'create_new_post.html', context);
+        # work for file
+        if request.FILES['myfile']:
+            myfile = request.FILES['myfile']
+            fs = FileSystemStorage()
+            filename = fs.save(myfile.name, myfile)
+            uploaded_file_url = fs.url(filename)
+            context['uploaded_file_url'] = uploaded_file_url
+            post.image_file_link = uploaded_file_url
+            post.save();
+            messages.success(request, 'post created successfully')
+            return render(request, 'create_new_post.html', context);
